@@ -23,7 +23,7 @@ def parse_mutation(mutation):
 
     # Regex pattern:
     # Letter + Number + Letter
-    pattern = r"^([A-Z])(\d+)([A-Z])$"
+    pattern = r"^([A-Z])(\d+)([A-Z*])$"
 
     # Check if mutation follows the pattern
     match = re.match(pattern, mutation)
@@ -45,7 +45,10 @@ def parse_mutation(mutation):
 
 def classify_mutation(parsed):
 
-    if parsed["wild_type"] == parsed["mutant"]:
+    if parsed["mutant"] == "*":
+        return "Nonsense"
+
+    elif parsed["wild_type"] == parsed["mutant"]:
         return "Silent"
 
     else:
