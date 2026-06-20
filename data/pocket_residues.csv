@@ -1,0 +1,9 @@
+residue_id,residue_name,functional_region,residue_role,interaction_type,source,conserved
+71,N,FAD_binding,cofactor_contact,hydrogen_bond,PMC4659487,True
+175,Y,FAD_binding,cofactor_contact,hydrogen_bond,PMC4659487,True
+176,R,substrate_binding,substrate_contact,electrostatic,PMC4659487,True
+210,Y,active_site,structural_loop,steric,PMC4659487,True
+238,R,substrate_binding,substrate_contact,electrostatic,PMC4659487,True
+257,S,active_site,proton_donor,acid_base_catalysis,PMC4659487,True
+324,H,FAD_binding,cofactor_contact,hydrogen_bond,PMC4659487,True
+361,E,FAD_binding,cofactor_contact,electrostatic,PMC4659487,True

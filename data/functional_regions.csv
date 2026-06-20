@@ -1,0 +1,5 @@
+region_name,residue_start,residue_end,biological_function,drug_relevance,source
+Domain_I_FAD_binding,21,81,FAD cofactor binding,High,Eniyan_2018
+Domain_II_FAD_active,90,244,FAD binding and active site,High,Eniyan_2018
+Domain_III_substrate,245,361,Substrate binding,High,Eniyan_2018
+Domain_I_Cterminal,364,369,FAD cofactor binding,Moderate,Eniyan_2018
