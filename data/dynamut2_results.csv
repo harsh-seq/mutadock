@@ -1,0 +1,4 @@
+mutation,residue_id,wt_aa,mut_aa,pdb_id,chain,ddg_kcal_mol,ddg_class,ddg_subtier
+R176H,176,Arg,His,5JZX,A,-0.70,Destabilizing,Mild
+Y210F,210,Tyr,Phe,5JZX,A,-0.70,Destabilizing,Mild
+S257A,257,Ser,Ala,5JZX,A,-0.82,Destabilizing,Mild
