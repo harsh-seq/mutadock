@@ -4,7 +4,7 @@ import re
 # =========================
 # INPUT MUTATION
 # =========================
-mutation = "Y210F"      # Change to Y210F or S257A
+mutation = "S257A"      # Change to Y210F or S257A or R176H
 
 # Extract residue number
 residue_id = int(re.search(r"\d+", mutation).group())
@@ -131,6 +131,31 @@ def generate_interpretation(context):
             "This residue contributes to local structural organization, although the precise functional impact of substitution remains uncertain."
         )
 
+
+# --------------------------------
+    # CLAUDE REVIEW IMPROVEMENTS
+    # --------------------------------
+    if interaction == "acid_base_catalysis":
+        interpretation.append(
+            "This residue participates directly in catalytic chemistry; substitutions may disrupt enzymatic proton-transfer mechanisms."
+        )
+
+    elif interaction == "electrostatic":
+        interpretation.append(
+            "This residue contributes electrostatic interactions important for substrate recognition; substitutions may weaken local binding interactions."
+        )
+
+    elif interaction == "steric":
+        interpretation.append(
+            "The residue appears to contribute primarily through steric packing, making functional consequences more difficult to predict with confidence."
+        )
+
+    elif interaction == "hydrogen_bond":
+        interpretation.append(
+            "This residue may participate in hydrogen-bond networks that contribute to structural stability or ligand recognition."
+        )
+
+
     # --------------------------------
     # FINAL STATEMENT
     # --------------------------------
@@ -139,6 +164,60 @@ def generate_interpretation(context):
     )
 
     return "\n\n".join(interpretation)
+
+
+def calculate_relevance(context):
+
+    score = 0
+
+    if context["role"] != "None":
+        score += 2
+
+    if context["conserved"]:
+        score += 1
+
+    if len(context["domains"]) > 1:
+        score += 1
+
+    if context["role"] != "None":
+        score += 3
+
+    if score >= 6:
+        level = "HIGH"
+    elif score >= 3:
+        level = "MODERATE"
+    else:
+        level = "LOW"
+
+    return score, level
+
+
+def calculate_impact(context):
+
+    score = 0
+
+    interaction = context["interaction_type"]
+
+    if interaction == "acid_base_catalysis":
+        score += 3
+
+    elif interaction == "electrostatic":
+        score += 2
+
+    elif interaction == "hydrogen_bond":
+        score += 2
+
+    elif interaction == "steric":
+        score += 1
+
+    if score >= 3:
+        level = "HIGH"
+    elif score >= 2:
+        level = "MODERATE"
+    else:
+        level = "LOW"
+
+    return score, level
 
 # =========================
 # FINAL CONTEXT
@@ -164,3 +243,18 @@ for key, value in context.items():
 
 print("\n===== INTERPRETATION =====\n")
 print(generate_interpretation(context))
+
+print("\n===== STRUCTURAL RELEVANCE =====\n")
+
+relevance_score, relevance_level = calculate_relevance(context)
+
+print(f"Score : {relevance_score}")
+print(f"Level : {relevance_level}")
+
+
+print("\n===== STRUCTURAL IMPACT =====\n")
+
+impact_score, impact_level = calculate_impact(context)
+
+print(f"Score : {impact_score}")
+print(f"Level : {impact_level}")
