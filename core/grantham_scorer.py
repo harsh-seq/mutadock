@@ -96,6 +96,29 @@ def analyze_grantham_change(matrix, wild_type, mutant):
     print("\n====================================")
 
 
+
+def analyze_grantham(wild_type, mutant):
+
+    matrix = load_grantham_matrix()
+
+    score = get_grantham_score(
+        matrix,
+        wild_type,
+        mutant
+    )
+
+    interpretation = interpret_grantham_score(score)
+
+    return {
+        "wild_type": wild_type,
+        "mutant": mutant,
+        "grantham_score": score,
+        "grantham_interpretation": interpretation
+    }
+
+
+
+
 # ==========================================
 # Testing Section
 # Runs only when file is executed directly

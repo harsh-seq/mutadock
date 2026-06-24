@@ -1,36 +1,7 @@
 import pandas as pd
 
 
-# =========================
-# INPUTS
-# =========================
 
-mutation = "R176H"
-
-# Simulated Module 4 output
-structural_impact_level = "MODERATE"
-
-
-# =========================
-# LOAD DYNAMUT2 DATA
-# =========================
-
-dynamut_df = pd.read_csv("data/dynamut2_results.csv")
-
-
-# =========================
-# LOOKUP MUTATION
-# =========================
-
-match = dynamut_df[dynamut_df["mutation"] == mutation]
-
-if match.empty:
-    raise ValueError(f"{mutation} not found in DynaMut2 dataset")
-
-
-row = match.iloc[0]
-
-ddg = row["ddg_kcal_mol"]
 
 
 # =========================
@@ -151,40 +122,81 @@ def generate_interpretation(
 
 
 # =========================
-# ANALYSIS
+# PIPELINE FUNCTION
 # =========================
 
-ddg_class = classify_ddg(ddg)
+def analyze_dynamut_validation(
+        mutation,
+        structural_impact_level):
 
-ddg_subtier = assign_ddg_subtier(ddg)
+    dynamut_df = pd.read_csv(
+        "data/dynamut2_results.csv"
+    )
 
-agreement = check_agreement(
-    structural_impact_level,
-    ddg_class,
-    ddg
-)
+    match = dynamut_df[
+        dynamut_df["mutation"] == mutation
+    ]
 
-interpretation = generate_interpretation(
-    mutation,
-    ddg,
-    ddg_class,
-    ddg_subtier,
-    agreement
-)
+    if match.empty:
+        raise ValueError(
+            f"{mutation} not found in DynaMut2 dataset"
+        )
+
+    row = match.iloc[0]
+
+    ddg = row["ddg_kcal_mol"]
+
+    ddg_class = classify_ddg(ddg)
+
+    ddg_subtier = assign_ddg_subtier(ddg)
+
+    agreement = check_agreement(
+        structural_impact_level,
+        ddg_class,
+        ddg
+    )
+
+    interpretation = generate_interpretation(
+        mutation,
+        ddg,
+        ddg_class,
+        ddg_subtier,
+        agreement
+    )
+
+    return {
+        "mutation": mutation,
+        "ddg": ddg,
+        "ddg_class": ddg_class,
+        "ddg_subtier": ddg_subtier,
+        "agreement": agreement,
+        "interpretation": interpretation
+    }
 
 
 # =========================
 # OUTPUT
 # =========================
 
-print("\n===== DYNAMUT2 VALIDATION =====\n")
+if __name__ == "__main__":
 
-print(f"Mutation           : {mutation}")
-print(f"DDG                : {ddg}")
-print(f"Classification     : {ddg_class}")
-print(f"Subtier            : {ddg_subtier}")
-print(f"Agreement Status   : {agreement}")
+    mutation = "R176H"
 
-print("\n===== INTERPRETATION =====\n")
+    structural_impact_level = "MODERATE"
 
-print(interpretation)
+    results = analyze_dynamut_validation(
+        mutation,
+        structural_impact_level
+    )
+
+    print("\n===== DYNAMUT2 VALIDATION =====\n")
+
+    print(f"Mutation           : {results['mutation']}")
+    print(f"DDG                : {results['ddg']}")
+    print(f"Classification     : {results['ddg_class']}")
+    print(f"Subtier            : {results['ddg_subtier']}")
+    print(f"Agreement Status   : {results['agreement']}")
+
+    print("\n===== INTERPRETATION =====\n")
+
+    print(results["interpretation"])

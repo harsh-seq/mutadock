@@ -96,6 +96,36 @@ def compare_amino_acids(df, wild_type, mutant):
 
 
 
+def analyze_property_change(wild_type, mutant):
+
+    df = load_amino_acid_properties()
+
+    wild_info = get_amino_acid_info(df, wild_type).iloc[0]
+    mutant_info = get_amino_acid_info(df, mutant).iloc[0]
+
+    return {
+        "wild_type": wild_type,
+        "mutant": mutant,
+
+        "wild_name": wild_info["name"],
+        "mutant_name": mutant_info["name"],
+
+        "charge_change":
+            f"{wild_info['charge']} -> {mutant_info['charge']}",
+
+        "polarity_change":
+            f"{wild_info['polarity']} -> {mutant_info['polarity']}",
+
+        "hydrophobicity_change":
+            f"{wild_info['hydrophobicity']} -> {mutant_info['hydrophobicity']}",
+
+        "molecular_weight_change":
+            f"{wild_info['molecular_weight']} -> {mutant_info['molecular_weight']}",
+
+        "size_change":
+            f"{wild_info['size']} -> {mutant_info['size']}"
+    }
+
 
 # ==========================================
 # Testing Section

@@ -1,53 +1,6 @@
 import pandas as pd
 import re
 
-# =========================
-# INPUT MUTATION
-# =========================
-mutation = "R176H"      # Change to Y210F or S257A or R176H
-
-# Extract residue number
-residue_id = int(re.search(r"\d+", mutation).group())
-
-# =========================
-# LOAD CSV FILES
-# =========================
-pocket_df = pd.read_csv("data/pocket_residues.csv")
-domains_df = pd.read_csv("data/functional_regions.csv")
-ss_df = pd.read_csv("data/secondary_structure.csv")
-
-# =========================
-# POCKET RESIDUE LOOKUP
-# =========================
-pocket_match = pocket_df[pocket_df["residue_id"] == residue_id]
-
-if not pocket_match.empty:
-    role = pocket_match.iloc[0]["residue_role"]
-    interaction = pocket_match.iloc[0]["interaction_type"]
-    conserved = pocket_match.iloc[0]["conserved"]
-else:
-    role = "None"
-    interaction = "None"
-    conserved = False
-
-# =========================
-# DOMAIN LOOKUP
-# =========================
-domains = []
-
-for _, row in domains_df.iterrows():
-    if row["residue_start"] <= residue_id <= row["residue_end"]:
-        domains.append(row["region_name"])
-
-# =========================
-# SECONDARY STRUCTURE LOOKUP
-# =========================
-secondary_structure = "Loop"
-
-for _, row in ss_df.iterrows():
-    if row["residue_start"] <= residue_id <= row["residue_end"]:
-        secondary_structure = row["ss_type"]
-        break
 
 
 def generate_interpretation(context):
@@ -135,7 +88,7 @@ def generate_interpretation(context):
 
 
 # --------------------------------
-    # CLAUDE REVIEW IMPROVEMENTS
+    # INTERACTION SPECIFIC ANALYSIS
     # --------------------------------
     if interaction == "acid_base_catalysis":
         interpretation.append(
@@ -222,46 +175,89 @@ def calculate_impact(context):
     return score, level
 
 # =========================
-# FINAL CONTEXT
+# PIPELINE FUNCTION
 # =========================
 
-context = {
-    "mutation": mutation,
-    "residue_id": residue_id,
-    "role": role,
-    "interaction_type": interaction,
-    "conserved": conserved,
-    "domains": domains,
-    "secondary_structure": secondary_structure,
+def analyze_structural_context(mutation):
 
-    # Risk Scorer field
-    "structural_impact_driver": role
-}
+    residue_id = int(re.search(r"\d+", mutation).group())
+
+    pocket_df = pd.read_csv("data/pocket_residues.csv")
+    domains_df = pd.read_csv("data/functional_regions.csv")
+    ss_df = pd.read_csv("data/secondary_structure.csv")
+
+    pocket_match = pocket_df[
+        pocket_df["residue_id"] == residue_id
+    ]
+
+    if not pocket_match.empty:
+        role = pocket_match.iloc[0]["residue_role"]
+        interaction = pocket_match.iloc[0]["interaction_type"]
+        conserved = pocket_match.iloc[0]["conserved"]
+
+    else:
+        role = "None"
+        interaction = "None"
+        conserved = False
+
+    domains = []
+
+    for _, row in domains_df.iterrows():
+
+        if row["residue_start"] <= residue_id <= row["residue_end"]:
+            domains.append(row["region_name"])
+
+    secondary_structure = "Loop"
+
+    for _, row in ss_df.iterrows():
+
+        if row["residue_start"] <= residue_id <= row["residue_end"]:
+            secondary_structure = row["ss_type"]
+            break
+
+    context = {
+        "mutation": mutation,
+        "residue_id": residue_id,
+        "role": role,
+        "interaction_type": interaction,
+        "conserved": conserved,
+        "domains": domains,
+        "secondary_structure": secondary_structure,
+
+        "structural_impact_driver": role
+    }
+
+    relevance_score, relevance_level = calculate_relevance(context)
+
+    impact_score, impact_level = calculate_impact(context)
+
+    return {
+        **context,
+
+        "relevance_score": relevance_score,
+        "relevance_level": relevance_level,
+
+        "impact_score": impact_score,
+        "impact_level": impact_level,
+
+        "interpretation":
+            generate_interpretation(context)
+    }
 
 
-# =========================
-# OUTPUT
-# =========================
-print("\n===== STRUCTURAL CONTEXT =====\n")
 
-for key, value in context.items():
-    print(f"{key}: {value}")
+if __name__ == "__main__":
 
+    mutation = "R176H"
 
-print("\n===== INTERPRETATION =====\n")
-print(generate_interpretation(context))
+    results = analyze_structural_context(mutation)
 
-print("\n===== STRUCTURAL RELEVANCE =====\n")
+    print("\n===== STRUCTURAL CONTEXT =====\n")
 
-relevance_score, relevance_level = calculate_relevance(context)
+    for key, value in results.items():
 
-print(f"Score : {relevance_score}")
-print(f"Level : {relevance_level}")
+        if key != "interpretation":
+            print(f"{key}: {value}")
 
-
-print("\n===== STRUCTURAL IMPACT =====\n")
-
-impact_score, impact_level = calculate_impact(context)
-
-print(f"Score : {impact_score}")
-print(f"Level : {impact_level}")
+    print("\n===== INTERPRETATION =====\n")
+    print(results["interpretation"])

@@ -55,6 +55,21 @@ def classify_mutation(parsed):
         return "Missense"
 
 
+
+def analyze_mutation(mutation):
+
+    parsed = parse_mutation(mutation)
+
+    mutation_type = classify_mutation(parsed)
+
+    return {
+        "mutation": mutation,
+        "wild_type": parsed["wild_type"],
+        "position": parsed["position"],
+        "mutant": parsed["mutant"],
+        "mutation_type": mutation_type
+    }
+
 # ==========================================
 # Test Block
 # Runs only when file is executed directly
