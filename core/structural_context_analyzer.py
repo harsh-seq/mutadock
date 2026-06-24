@@ -4,7 +4,7 @@ import re
 # =========================
 # INPUT MUTATION
 # =========================
-mutation = "S257A"      # Change to Y210F or S257A or R176H
+mutation = "R176H"      # Change to Y210F or S257A or R176H
 
 # Extract residue number
 residue_id = int(re.search(r"\d+", mutation).group())
@@ -116,10 +116,12 @@ def generate_interpretation(context):
     # --------------------------------
     # SPECIAL MURB LOGIC
     # --------------------------------
-    if role == "proton_donor":
+    
+
+    if role == "proton_donor" and interaction != "acid_base_catalysis":
         interpretation.append(
-            "Because this residue participates directly in catalytic proton transfer, substitutions here may affect enzymatic activity."
-        )
+        "Because this residue participates directly in catalytic proton transfer, substitutions here may affect enzymatic activity."
+    )
 
     elif role == "substrate_contact":
         interpretation.append(
@@ -222,6 +224,7 @@ def calculate_impact(context):
 # =========================
 # FINAL CONTEXT
 # =========================
+
 context = {
     "mutation": mutation,
     "residue_id": residue_id,
@@ -229,8 +232,12 @@ context = {
     "interaction_type": interaction,
     "conserved": conserved,
     "domains": domains,
-    "secondary_structure": secondary_structure
+    "secondary_structure": secondary_structure,
+
+    # Risk Scorer field
+    "structural_impact_driver": role
 }
+
 
 # =========================
 # OUTPUT
