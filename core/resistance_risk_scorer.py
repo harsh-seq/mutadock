@@ -3,27 +3,7 @@
 # Resistance Risk Scorer
 # ==========================================
 
-# =========================
-# INPUTS
-# =========================
 
-mutation = "Y210F"
-
-# Simulated outputs from previous modules
-
-mutation_type = "Missense"
-
-grantham_score = 22
-
-structural_impact_level = "LOW"
-
-structural_impact_driver = "structural_loop"
-
-agreement = "PARTIAL"
-
-conserved = True
-
-ddg = -0.70
 
 # =========================
 # DRIVER DISPLAY NAMES
@@ -160,58 +140,124 @@ def generate_interpretation(
 
 
 # =========================
-# ANALYSIS
+# PIPELINE FUNCTION
 # =========================
 
-verdict = determine_verdict(
-    structural_impact_driver,
-    structural_impact_level,
-    agreement
-)
+def analyze_resistance_risk(
+        mutation,
+        mutation_type,
+        grantham_score,
+        structural_impact_level,
+        structural_impact_driver,
+        agreement,
+        conserved,
+        ddg):
 
-confidence = determine_confidence(
-    verdict,
-    agreement,
-    conserved
-)
+    verdict = determine_verdict(
+        structural_impact_driver,
+        structural_impact_level,
+        agreement
+    )
 
-score = calculate_score(
-    verdict,
-    grantham_score
-)
+    confidence = determine_confidence(
+        verdict,
+        agreement,
+        conserved
+    )
 
-interpretation = generate_interpretation(
-    verdict,
-    structural_impact_driver
-)
+    score = calculate_score(
+        verdict,
+        grantham_score
+    )
 
+    interpretation = generate_interpretation(
+        verdict,
+        structural_impact_driver
+    )
+
+    return {
+        "mutation": mutation,
+        "mutation_type": mutation_type,
+
+        "score": score,
+
+        "verdict": verdict,
+
+        "confidence": confidence,
+
+        "primary_driver":
+            driver_map[structural_impact_driver],
+
+        "grantham_score": grantham_score,
+
+        "structural_impact":
+            structural_impact_level,
+
+        "ddg": ddg,
+
+        "agreement": agreement,
+
+        "interpretation":
+            interpretation
+    }
 
 # =========================
 # OUTPUT
 # =========================
 
-print("\n===== FINAL VERDICT =====\n")
+if __name__ == "__main__":
 
-print(f"Mutation : {mutation}")
+    results = analyze_resistance_risk(
+        mutation="Y210F",
+        mutation_type="Missense",
+        grantham_score=22,
+        structural_impact_level="LOW",
+        structural_impact_driver="structural_loop",
+        agreement="PARTIAL",
+        conserved=True,
+        ddg=-0.70
+    )
 
-print(f"\nUnified Resistance Score : {score}/10")
+    print("\n===== FINAL VERDICT =====\n")
 
-print("\nVerdict :")
-print(verdict)
+    print(f"Mutation : {results['mutation']}")
 
-print("\nConfidence :")
-print(confidence)
+    print(
+        f"\nUnified Resistance Score : "
+        f"{results['score']}/10"
+    )
 
+    print("\nVerdict :")
+    print(results["verdict"])
 
-print("\nPrimary Driver :")
-print(driver_map[structural_impact_driver])
+    print("\nConfidence :")
+    print(results["confidence"])
 
-print("\nSupporting Evidence :")
-print(f"Grantham Score     = {grantham_score}")
-print(f"Structural Impact  = {structural_impact_level}")
-print(f"DDG                = {ddg}")
-print(f"Agreement          = {agreement}")
+    print("\nPrimary Driver :")
+    print(results["primary_driver"])
 
-print("\nFINAL INTERPRETATION :\n")
+    print("\nSupporting Evidence :")
 
-print(interpretation)
+    print(
+        f"Grantham Score     = "
+        f"{results['grantham_score']}"
+    )
+
+    print(
+        f"Structural Impact  = "
+        f"{results['structural_impact']}"
+    )
+
+    print(
+        f"DDG                = "
+        f"{results['ddg']}"
+    )
+
+    print(
+        f"Agreement          = "
+        f"{results['agreement']}"
+    )
+
+    print("\nFINAL INTERPRETATION :\n")
+
+    print(results["interpretation"])
