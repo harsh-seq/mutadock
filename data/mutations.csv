@@ -1,17 +1,17 @@
 gene,mutation,validation_status,analysis_type
 
-rpoB,S450L,WHO_validated,basic
-rpoB,H445Y,WHO_validated,basic
-rpoB,D435V,WHO_validated,basic
-rpoB,L452P,WHO_validated,basic
-rpoB,I491F,WHO_validated,basic
+rpoB,S450L,WHO validated,basic
+rpoB,H445Y,WHO validated,basic
+rpoB,D435V,WHO validated,basic
+rpoB,L452P,WHO validated,basic
+rpoB,I491F,WHO validated,basic
 
-katG,S315T,WHO_validated,basic
-katG,W321R,Literature_reported,basic
-katG,R463L,Literature_reported,basic
-katG,G279D,Literature_reported,basic
-katG,N138H,Literature_reported,basic
+katG,S315T,WHO validated,basic
+katG,W321R,Literature reported,basic
+katG,R463L,Literature reported,basic
+katG,G279D,Literature reported,basic
+katG,N138H,Literature reported,basic
 
-MurB,R176H,Structural_showcase,full
-MurB,Y210F,Structural_showcase,full
-MurB,S257A,Structural_showcase,full
+MurB,R176H,Structural showcase,full
+MurB,Y210F,Structural showcase,full
+MurB,S257A,Structural showcase,full
