@@ -159,7 +159,7 @@ def analyze_resistance_risk(
     # RPOB / KATG CLINICAL SCORING
     # ======================================
 
-    if gene.lower() in ["rpoB", "katG"]:
+    if gene in ["rpoB", "katG"]:
 
         if evidence_category == "WHO Confirmed":
 

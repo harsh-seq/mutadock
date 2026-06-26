@@ -23,7 +23,7 @@ mutation_db = pd.read_csv(
 
 mutation = input(
     "Enter mutation (e.g. S450L, R176H): "
-).strip()
+).strip().upper()
 
 
 
@@ -63,8 +63,11 @@ grantham_score = module3["grantham_score"]
 # LOOKUP MUTATION DATABASE
 # ==========================================
 
+
+
+# Search curated mutation database
 match = mutation_db[
-    mutation_db["mutation"] == mutation
+    mutation_db["mutation"].str.upper() == mutation
 ]
 
 known_mutation = not match.empty
@@ -74,9 +77,10 @@ if known_mutation:
     row = match.iloc[0]
 
     gene = row["gene"]
-    analysis_type = row["analysis_type"]
-    evidence_category = row["evidence_category"]
 
+    analysis_type = row["analysis_type"]
+
+    evidence_category = row["evidence_category"]
 
 # ==========================================
 # FULL ANALYSIS PATHWAY (MurB)
@@ -165,13 +169,41 @@ if not known_mutation:
         f"{module3['grantham_interpretation']}"
     )
 
+
+    print("\n----- Amino Acid Property Analysis -----")
+
+    print(
+        f"Charge Change        : "
+        f"{module2['charge_change']}"
+    )
+
+    print(
+        f"Polarity Change      : "
+        f"{module2['polarity_change']}"
+    )
+
+    print(
+        f"Hydrophobicity       : "
+        f"{module2['hydrophobicity_change']}"
+    )
+
+    print(
+        f"Molecular Weight     : "
+        f"{module2['molecular_weight_change']}"
+    )
+
+    print(
+        f"Size Change          : "
+        f"{module2['size_change']}"
+    )
+
     print("\nClinical Evidence  :")
     print("Novel mutation (not present in curated database)")
 
     print("\nRecommendation     :")
     print(
-        "Physicochemical analysis completed. "
-        "Experimental validation is recommended."
+        "Physicochemical analysis completed successfully. "
+        "Further structural and experimental validation is recommended before inferring drug reistance potential."
     )
 
     quit()
@@ -182,21 +214,28 @@ if not known_mutation:
 # MODULE 6
 # ==========================================
 
-if known_mutation:
+module6 = analyze_resistance_risk(
 
-    module6 = analyze_resistance_risk(
-        mutation=mutation,
-        mutation_type=module1["mutation_type"],
-        grantham_score=grantham_score,
-        structural_impact_level=
-            structural_impact_level,
-        structural_impact_driver=
-            structural_impact_driver,
-        agreement=agreement,
-        conserved=conserved,
-        ddg=ddg
-    )
+    mutation=mutation,
 
+    gene=gene,
+
+    evidence_category=evidence_category,
+
+    mutation_type=module1["mutation_type"],
+
+    grantham_score=grantham_score,
+
+    structural_impact_level=structural_impact_level,
+
+    structural_impact_driver=structural_impact_driver,
+
+    agreement=agreement,
+
+    conserved=conserved,
+
+    ddg=ddg
+)
 # ==========================================
 # FINAL REPORT
 # ==========================================
