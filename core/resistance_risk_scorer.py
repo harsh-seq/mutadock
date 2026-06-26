@@ -185,7 +185,12 @@ def analyze_resistance_risk(
                 "with drug resistance."
             )
 
-        elif evidence_category == "Uncertain Significance":
+       
+
+        elif evidence_category in [
+            "Uncertain Significance",
+            "WHO Discordant"
+        ]:
 
             if grantham_score >= 100:
                 score = 6
@@ -201,7 +206,10 @@ def analyze_resistance_risk(
                 "for definitive classification."
             )
 
-        elif evidence_category == "Not Associated with Resistance":
+        elif evidence_category in [
+    "Not Associated with Resistance",
+    "Negative Control"
+]:
 
             score = 2
             verdict = "Not Associated with Resistance"
