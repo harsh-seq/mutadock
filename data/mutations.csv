@@ -1,17 +1,16 @@
-gene,mutation,validation_status,analysis_type
+gene,mutation,drug,analysis type,who grade all datasets,who grade who dataset,evidence status
+rpoB,S450L,Rifampicin,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+rpoB,H445Y,Rifampicin,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+rpoB,D435V,Rifampicin,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+rpoB,L452P,Rifampicin,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+rpoB,I491F,Rifampicin,basic,Associated with Resistance,Uncertain Significance,WHO Discordant
 
-rpoB,S450L,WHO validated,basic
-rpoB,H445Y,WHO validated,basic
-rpoB,D435V,WHO validated,basic
-rpoB,L452P,WHO validated,basic
-rpoB,I491F,WHO validated,basic
+katG,S315T,Isoniazid,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+katG,S315N,Isoniazid,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+katG,S315R,Isoniazid,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+katG,W328L,Isoniazid,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
+katG,R463L,Isoniazid,basic,Not Associated with Resistance,Not Associated with Resistance,Negative Control
 
-katG,S315T,WHO validated,basic
-katG,W321R,Literature reported,basic
-katG,R463L,Literature reported,basic
-katG,G279D,Literature reported,basic
-katG,N138H,Literature reported,basic
-
-MurB,R176H,Structural showcase,full
-MurB,Y210F,Structural showcase,full
-MurB,S257A,Structural showcase,full
+MurB,R176H,None,full,NA,NA,Structural Showcase
+MurB,Y210F,None,full,NA,NA,Structural Showcase
+MurB,S257A,None,full,NA,NA,Structural Showcase
