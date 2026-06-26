@@ -1,4 +1,4 @@
-gene,mutation,drug,analysis type,who grade all datasets,who grade who dataset,evidence status
+gene,mutation,drug,analysis_type,who_grade_all_datasets,who_grade_who_dataset,evidence_category
 rpoB,S450L,Rifampicin,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
 rpoB,H445Y,Rifampicin,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed
 rpoB,D435V,Rifampicin,basic,Associated with Resistance,Associated with Resistance,WHO Confirmed

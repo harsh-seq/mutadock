@@ -26,25 +26,6 @@ mutation = input(
 ).strip()
 
 
-# ==========================================
-# LOOKUP MUTATION
-# ==========================================
-
-match = mutation_db[
-    mutation_db["mutation"] == mutation
-]
-
-if match.empty:
-    raise ValueError(
-        f"{mutation} not found in mutation database"
-    )
-
-row = match.iloc[0]
-
-gene = row["gene"]
-analysis_type = row["analysis_type"]
-validation_status = row["validation_status"]
-
 
 # ==========================================
 # MODULE 1
@@ -79,10 +60,29 @@ grantham_score = module3["grantham_score"]
 
 
 # ==========================================
+# LOOKUP MUTATION DATABASE
+# ==========================================
+
+match = mutation_db[
+    mutation_db["mutation"] == mutation
+]
+
+known_mutation = not match.empty
+
+if known_mutation:
+
+    row = match.iloc[0]
+
+    gene = row["gene"]
+    analysis_type = row["analysis_type"]
+    evidence_category = row["evidence_category"]
+
+
+# ==========================================
 # FULL ANALYSIS PATHWAY (MurB)
 # ==========================================
 
-if analysis_type == "full":
+if known_mutation and analysis_type == "full":
 
     module4 = analyze_structural_context(
         mutation
@@ -112,7 +112,7 @@ if analysis_type == "full":
 # BASIC ANALYSIS PATHWAY
 # ==========================================
 
-else:
+elif known_mutation:
 
     structural_impact_level = "LOW"
 
@@ -128,191 +128,245 @@ else:
 
 
 # ==========================================
+# NOVEL MUTATION PATHWAY
+# ==========================================
+
+if not known_mutation:
+
+    print("\n")
+    print("=" * 50)
+    print("MUTADOCK NOVEL MUTATION REPORT")
+    print("=" * 50)
+
+    print(f"\nMutation           : {mutation}")
+
+    print(
+        f"Mutation Type      : "
+        f"{module1['mutation_type']}"
+    )
+
+    print(
+        f"Wild Type Amino Acid : "
+        f"{module2['wild_name']} ({module2['wild_type']})"
+    )
+
+    print(
+        f"Mutant Amino Acid    : "
+        f"{module2['mutant_name']} ({module2['mutant']})"
+    )
+
+    print(
+        f"Grantham Score     : "
+        f"{module3['grantham_score']}"
+    )
+
+    print(
+        f"Interpretation     : "
+        f"{module3['grantham_interpretation']}"
+    )
+
+    print("\nClinical Evidence  :")
+    print("Novel mutation (not present in curated database)")
+
+    print("\nRecommendation     :")
+    print(
+        "Physicochemical analysis completed. "
+        "Experimental validation is recommended."
+    )
+
+    quit()
+
+
+
+# ==========================================
 # MODULE 6
 # ==========================================
 
-module6 = analyze_resistance_risk(
-    mutation=mutation,
-    mutation_type=module1["mutation_type"],
-    grantham_score=grantham_score,
-    structural_impact_level=
-        structural_impact_level,
-    structural_impact_driver=
-        structural_impact_driver,
-    agreement=agreement,
-    conserved=conserved,
-    ddg=ddg
-)
+if known_mutation:
 
+    module6 = analyze_resistance_risk(
+        mutation=mutation,
+        mutation_type=module1["mutation_type"],
+        grantham_score=grantham_score,
+        structural_impact_level=
+            structural_impact_level,
+        structural_impact_driver=
+            structural_impact_driver,
+        agreement=agreement,
+        conserved=conserved,
+        ddg=ddg
+    )
 
 # ==========================================
 # FINAL REPORT
 # ==========================================
 
-print("\n")
-print("=" * 50)
-print("MUTADOCK ANALYSIS REPORT")
-print("=" * 50)
+if known_mutation:
 
-print(f"\nGene               : {gene}")
-print(f"Mutation           : {mutation}")
-print(f"Validation Status  : {validation_status}")
+    print("\n")
+    print("=" * 50)
+    print("MUTADOCK ANALYSIS REPORT")
+    print("=" * 50)
 
-print("\n----- Classification -----")
+    print(f"\nGene               : {gene}")
+    print(f"Mutation           : {mutation}")
+    print(f"Evidence Category  : {evidence_category}")
 
-print(
-    f"Mutation Type      : "
-    f"{module1['mutation_type']}"
-)
-
-print(
-    f"Wild Type          : "
-    f"{module1['wild_type']}"
-)
-
-print(
-    f"Mutant             : "
-    f"{module1['mutant']}"
-)
-
-print("\n----- Grantham -----")
-
-print(
-    f"Score              : "
-    f"{module3['grantham_score']}"
-)
-
-print(
-    f"Interpretation     : "
-    f"{module3['grantham_interpretation']}"
-)
-
-
-print("\n----- Amino Acid Property Analysis -----")
-
-print(
-    f"Wild Type Amino Acid : "
-    f"{module2['wild_name']} ({module2['wild_type']})"
-)
-
-print(
-    f"Mutant Amino Acid    : "
-    f"{module2['mutant_name']} ({module2['mutant']})"
-)
-
-print(
-    f"Charge Change        : "
-    f"{module2['charge_change']}"
-)
-
-print(
-    f"Polarity Change      : "
-    f"{module2['polarity_change']}"
-)
-
-print(
-    f"Hydrophobicity       : "
-    f"{module2['hydrophobicity_change']}"
-)
-
-print(
-    f"Molecular Weight     : "
-    f"{module2['molecular_weight_change']}"
-)
-
-print(
-    f"Size Change          : "
-    f"{module2['size_change']}"
-)
-
-if analysis_type == "full":
-
-    print("\n----- Structural Context -----")
+    print("\n----- Classification -----")
 
     print(
-        f"Residue Role         : "
-        f"{module4['role']}"
+        f"Mutation Type      : "
+        f"{module1['mutation_type']}"
     )
 
     print(
-        f"Interaction Type     : "
-        f"{module4['interaction_type']}"
+        f"Wild Type          : "
+        f"{module1['wild_type']}"
     )
 
     print(
-        f"Conserved            : "
-        f"{module4['conserved']}"
+        f"Mutant             : "
+        f"{module1['mutant']}"
+    )
+
+    print("\n----- Grantham -----")
+
+    print(
+        f"Score              : "
+        f"{module3['grantham_score']}"
     )
 
     print(
-        f"Domains              : "
-        f"{', '.join(module4['domains'])}"
+        f"Interpretation     : "
+        f"{module3['grantham_interpretation']}"
+    )
+
+
+    print("\n----- Amino Acid Property Analysis -----")
+
+    print(
+        f"Wild Type Amino Acid : "
+        f"{module2['wild_name']} ({module2['wild_type']})"
     )
 
     print(
-        f"Secondary Structure  : "
-        f"{module4['secondary_structure']}"
+        f"Mutant Amino Acid    : "
+        f"{module2['mutant_name']} ({module2['mutant']})"
     )
 
     print(
-        f"Structural Relevance : "
-        f"{module4['relevance_level']}"
+        f"Charge Change        : "
+        f"{module2['charge_change']}"
     )
 
     print(
-        f"Structural Impact    : "
-        f"{module4['impact_level']}"
-    )
-
-
-if analysis_type == "full":
-
-    print("\n----- Stability Validation -----")
-
-    print(
-        f"DDG                  : "
-        f"{module5['ddg']} kcal/mol"
+        f"Polarity Change      : "
+        f"{module2['polarity_change']}"
     )
 
     print(
-        f"Classification       : "
-        f"{module5['ddg_class']}"
+        f"Hydrophobicity       : "
+        f"{module2['hydrophobicity_change']}"
     )
 
     print(
-        f"Subtier              : "
-        f"{module5['ddg_subtier']}"
+        f"Molecular Weight     : "
+        f"{module2['molecular_weight_change']}"
     )
 
     print(
-        f"Agreement Status     : "
-        f"{module5['agreement']}"
+        f"Size Change          : "
+        f"{module2['size_change']}"
     )
 
-print("\n----- Final Verdict -----")
+    if analysis_type == "full":
 
-print(
-    f"Unified Risk Score : "
-    f"{module6['score']}/10"
-)
+        print("\n----- Structural Context -----")
 
-print(
-    f"Verdict            : "
-    f"{module6['verdict']}"
-)
+        print(
+            f"Residue Role         : "
+            f"{module4['role']}"
+        )
 
-print(
-    f"Confidence         : "
-    f"{module6['confidence']}"
-)
+        print(
+            f"Interaction Type     : "
+            f"{module4['interaction_type']}"
+        )
 
-print(
-    f"Primary Driver     : "
-    f"{module6['primary_driver']}"
-)
+        print(
+            f"Conserved            : "
+            f"{module4['conserved']}"
+        )
 
-print("\n----- Biological Interpretation -----")
+        print(
+            f"Domains              : "
+            f"{', '.join(module4['domains'])}"
+        )
 
-print(module6["interpretation"])
+        print(
+            f"Secondary Structure  : "
+            f"{module4['secondary_structure']}"
+        )
 
-print("\n")
+        print(
+            f"Structural Relevance : "
+            f"{module4['relevance_level']}"
+        )
+
+        print(
+            f"Structural Impact    : "
+            f"{module4['impact_level']}"
+        )
+
+
+    if analysis_type == "full":
+
+        print("\n----- Stability Validation -----")
+
+        print(
+            f"DDG                  : "
+            f"{module5['ddg']} kcal/mol"
+        )
+
+        print(
+            f"Classification       : "
+            f"{module5['ddg_class']}"
+        )
+
+        print(
+            f"Subtier              : "
+            f"{module5['ddg_subtier']}"
+        )
+
+        print(
+            f"Agreement Status     : "
+            f"{module5['agreement']}"
+        )
+
+    print("\n----- Final Verdict -----")
+
+    print(
+        f"Unified Risk Score : "
+        f"{module6['score']}/10"
+    )
+
+    print(
+        f"Verdict            : "
+        f"{module6['verdict']}"
+    )
+
+    print(
+        f"Confidence         : "
+        f"{module6['confidence']}"
+    )
+
+    print(
+        f"Primary Driver     : "
+        f"{module6['primary_driver']}"
+    )
+
+    print("\n----- Biological Interpretation -----")
+
+    print(module6["interpretation"])
+
+    print("\n")

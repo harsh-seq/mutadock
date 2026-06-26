@@ -145,6 +145,8 @@ def generate_interpretation(
 
 def analyze_resistance_risk(
         mutation,
+        gene,
+        evidence_category,
         mutation_type,
         grantham_score,
         structural_impact_level,
@@ -152,6 +154,96 @@ def analyze_resistance_risk(
         agreement,
         conserved,
         ddg):
+
+    # ======================================
+    # RPOB / KATG CLINICAL SCORING
+    # ======================================
+
+    if gene.lower() in ["rpoB", "katG"]:
+
+        if evidence_category == "WHO Confirmed":
+
+            score = 9
+            verdict = "Clinically Confirmed Resistance"
+            confidence = "VERY HIGH"
+            primary_driver = "WHO Clinical Evidence"
+
+            interpretation = (
+                "Clinical evidence strongly supports "
+                "this mutation as a drug-resistance determinant."
+            )
+
+        elif evidence_category == "Associated with Resistance":
+
+            score = 8
+            verdict = "Clinically Supported Resistance"
+            confidence = "HIGH"
+            primary_driver = "WHO Clinical Evidence"
+
+            interpretation = (
+                "Clinical evidence supports an association "
+                "with drug resistance."
+            )
+
+        elif evidence_category == "Uncertain Significance":
+
+            if grantham_score >= 100:
+                score = 6
+            else:
+                score = 4
+
+            verdict = "Uncertain Clinical Significance"
+            confidence = "MODERATE"
+            primary_driver = "WHO Clinical Classification"
+
+            interpretation = (
+                "Current clinical evidence is insufficient "
+                "for definitive classification."
+            )
+
+        elif evidence_category == "Not Associated with Resistance":
+
+            score = 2
+            verdict = "Not Associated with Resistance"
+            confidence = "HIGH"
+            primary_driver = "WHO Clinical Evidence"
+
+            interpretation = (
+                "Available clinical evidence does not support "
+                "an association with drug resistance."
+            )
+
+        else:
+
+             raise ValueError(
+                f"Unknown evidence category: {evidence_category}"
+    )
+
+        return {
+
+            "mutation": mutation,
+            "mutation_type": mutation_type,
+
+            "score": score,
+            "verdict": verdict,
+            "confidence": confidence,
+
+            "primary_driver": primary_driver,
+
+            "grantham_score": grantham_score,
+
+            "structural_impact": "N/A",
+
+            "ddg": "N/A",
+
+            "agreement": "Clinical Evidence",
+
+            "interpretation": interpretation
+        }
+
+    # ======================================
+    # MURB STRUCTURAL SCORING
+    # ======================================
 
     verdict = determine_verdict(
         structural_impact_driver,
@@ -176,6 +268,7 @@ def analyze_resistance_risk(
     )
 
     return {
+
         "mutation": mutation,
         "mutation_type": mutation_type,
 
@@ -201,6 +294,8 @@ def analyze_resistance_risk(
             interpretation
     }
 
+
+
 # =========================
 # OUTPUT
 # =========================
@@ -209,6 +304,8 @@ if __name__ == "__main__":
 
     results = analyze_resistance_risk(
         mutation="Y210F",
+        gene="MurB",
+        evidence_category="Structural Showcase",
         mutation_type="Missense",
         grantham_score=22,
         structural_impact_level="LOW",
