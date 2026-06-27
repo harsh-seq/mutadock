@@ -242,6 +242,127 @@ def plot_unified_risk_scores(df):
     plt.close()
 
 
+
+# ============================================================
+# FIGURE 02
+# GRANTHAM SCORE VS UNIFIED RISK SCORE
+# ============================================================
+
+def plot_grantham_vs_risk(df):
+    """
+    Generate Figure 02.
+
+    Relationship between Grantham Score and Unified Risk Score.
+    """
+
+    grantham = df["Grantham Score"]
+
+    risk = df["Unified Risk Score"]
+
+    genes = df["Gene"]
+
+    mutations = df["Mutation"]
+
+    colors = [GENE_COLORS[g] for g in genes]
+
+
+    # --------------------------------------------------
+
+    plt.figure(figsize=(10, 6))
+
+    plt.scatter(
+        grantham,
+        risk,
+        c=colors,
+        s=90,
+        edgecolors="black",
+        linewidths=0.8,
+        alpha=0.9
+    )
+
+
+    # --------------------------------------------------
+    # Annotate each mutation
+    # --------------------------------------------------
+
+    for x, y, label in zip(grantham, risk, mutations):
+
+        plt.text(
+            x + 2,
+            y + 0.08,
+            label,
+            fontsize=8,
+            bbox=dict(
+                facecolor="white",
+                edgecolor="none",
+                alpha=0.75,
+                pad=1
+            )
+        )
+
+
+    # --------------------------------------------------
+
+    plt.title(
+        "Grantham Score vs Unified Resistance Risk",
+        pad=25
+    )
+
+    plt.xlabel("Grantham Score")
+
+    plt.ylabel("Unified Risk Score")
+
+    plt.xlim(0, 170)
+
+    plt.ylim(0, 10.5)
+
+    plt.grid(axis="both")
+
+
+    # --------------------------------------------------
+    # Legend
+    # --------------------------------------------------
+
+    legend_elements = [
+
+        Patch(
+            facecolor=GENE_COLORS["rpoB"],
+            edgecolor="black",
+            label="rpoB"
+        ),
+
+        Patch(
+            facecolor=GENE_COLORS["katG"],
+            edgecolor="black",
+            label="katG"
+        ),
+
+        Patch(
+            facecolor=GENE_COLORS["MurB"],
+            edgecolor="black",
+            label="MurB"
+        )
+
+    ]
+
+    plt.legend(
+        handles=legend_elements,
+        loc="upper left",
+        bbox_to_anchor=(1.01, 1)
+    )
+
+
+    save_figure(
+        "figure02_grantham_vs_risk.png"
+    )
+
+    plt.close()
+
+
+## Although Grantham score quantifies the biochemical severity of an amino acid substitution, mutations with similar Grantham scores can exhibit markedly
+## different resistance risks due to differences in functional importance, clinical evidence, structural context, and protein stability. MutaDock
+##integrates these complementary sources of evidence into a unified resistance risk score.
+
 # ============================================================
 # GENERATE ALL FIGURES
 # ============================================================
@@ -253,7 +374,11 @@ def generate_all_figures():
     if df is None:
         return
 
+    print("[1/8] Unified Risk Scores...")
     plot_unified_risk_scores(df)
+
+    print("[2/8] Grantham vs Risk...")
+    plot_grantham_vs_risk(df)
 
     print("\n✓ Visualization completed successfully.")
 
@@ -265,3 +390,4 @@ def generate_all_figures():
 if __name__ == "__main__":
 
     generate_all_figures()
+
