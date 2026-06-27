@@ -706,6 +706,83 @@ def plot_murb_structural_summary(df):
     plt.close()
 
 
+
+
+# ============================================================
+# FIGURE 06
+# EVIDENCE CATEGORY VS FINAL VERDICT
+# ============================================================
+
+def plot_who_evidence_vs_verdict(df):
+    """
+    Generate Figure 06.
+
+    Final verdicts assigned across evidence categories.
+    """
+
+    verdict_counts = (
+        df.groupby(["Evidence Category", "Final Verdict"])
+        .size()
+        .unstack(fill_value=0)
+    )
+
+
+    # --------------------------------------------------
+    # Create Figure
+    # --------------------------------------------------
+
+    plt.figure(figsize=(10,6))
+
+    verdict_counts.plot(
+        kind="bar",
+        stacked=True,
+        ax=plt.gca(),
+        edgecolor="black"
+    )
+
+
+    # --------------------------------------------------
+    # Titles & Labels
+    # --------------------------------------------------
+
+    plt.title(
+        "Evidence Category vs Final Resistance Verdict",
+        pad=20
+    )
+
+    plt.xlabel("Evidence Category")
+
+    plt.ylabel("Number of Mutations")
+
+    plt.xticks(rotation=15)
+
+    plt.grid(axis="y")
+
+
+    # --------------------------------------------------
+    # Legend
+    # --------------------------------------------------
+
+    plt.legend(
+        title="Final Verdict",
+        bbox_to_anchor=(1.02,1),
+        loc="upper left"
+    )
+
+
+    # --------------------------------------------------
+    # Save Figure
+    # --------------------------------------------------
+
+    save_figure(
+        "figure06_who_evidence_vs_verdict.png"
+    )
+
+    plt.close()
+
+
+
+
 # ============================================================
 # GENERATE ALL FIGURES
 # ============================================================
@@ -732,6 +809,10 @@ def generate_all_figures():
 
     print("[5/8] MurB Structural Summary...")
     plot_murb_structural_summary(df)
+
+
+    print("[6/8] Evidence vs Verdict...")
+    plot_who_evidence_vs_verdict(df)
 
     print("\n✓ Visualization completed successfully.")
 
