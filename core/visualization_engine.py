@@ -484,6 +484,228 @@ def plot_evidence_distribution(df):
 # ============================================================
 
 
+
+# ============================================================
+# FIGURE 04
+# GENE DISTRIBUTION
+# ============================================================
+
+def plot_gene_distribution(df):
+    """
+    Generate Figure 04.
+
+    Distribution of curated mutations across genes.
+    """
+
+    gene_counts = (
+        df["Gene"]
+        .value_counts()
+    )
+
+    genes = gene_counts.index
+
+    counts = gene_counts.values
+
+
+    # --------------------------------------------------
+    # Colors
+    # --------------------------------------------------
+
+    colors = [
+        GENE_COLORS[g]
+        for g in genes
+    ]
+
+
+    # --------------------------------------------------
+    # Create Figure
+    # --------------------------------------------------
+
+    plt.figure(figsize=(7,6))
+
+    bars = plt.bar(
+        genes,
+        counts,
+        width=0.65,
+        color=colors,
+        edgecolor="black",
+        linewidth=0.8
+    )
+
+
+    # --------------------------------------------------
+    # Value Labels
+    # --------------------------------------------------
+
+    for bar in bars:
+
+        height = bar.get_height()
+
+        plt.text(
+            bar.get_x() + bar.get_width()/2,
+            height + 0.08,
+            str(height),
+            ha="center",
+            va="bottom",
+            fontsize=11,
+            fontweight="bold"
+        )
+
+
+    # --------------------------------------------------
+    # Titles & Labels
+    # --------------------------------------------------
+
+    plt.title(
+        "Distribution of Curated Mutations Across Genes",
+        pad=20
+    )
+
+    plt.xlabel("Gene")
+
+    plt.ylabel("Number of Mutations")
+
+
+    # --------------------------------------------------
+    # Axis
+    # --------------------------------------------------
+
+    plt.ylim(0,6)
+
+    plt.grid(axis="y")
+
+
+    # --------------------------------------------------
+    # Save Figure
+    # --------------------------------------------------
+
+    save_figure(
+        "figure04_gene_distribution.png"
+    )
+
+    plt.close()
+
+
+
+# ============================================================
+# FIGURE 05
+# MurB STRUCTURAL IMPACT SUMMARY
+# ============================================================
+
+def plot_murb_structural_summary(df):
+    """
+    Generate Figure 05.
+
+    Structural impact summary for MurB showcase mutations.
+    """
+
+    murb_df = df[df["Gene"] == "MurB"]
+
+    mutations = murb_df["Mutation"]
+
+    impacts = murb_df["Structural Impact"]
+
+
+    # --------------------------------------------------
+    # Impact Mapping
+    # --------------------------------------------------
+
+    impact_scores = {
+        "LOW": 1,
+        "MODERATE": 2,
+        "HIGH": 3
+    }
+
+    impact_colors = {
+        "LOW": "#2ca02c",
+        "MODERATE": "#ffbf00",
+        "HIGH": "#d62728"
+    }
+
+    values = [
+        impact_scores[i]
+        for i in impacts
+    ]
+
+    colors = [
+        impact_colors[i]
+        for i in impacts
+    ]
+
+
+    # --------------------------------------------------
+    # Create Figure
+    # --------------------------------------------------
+
+    plt.figure(figsize=(8,6))
+
+    bars = plt.bar(
+        mutations,
+        values,
+        width=0.6,
+        color=colors,
+        edgecolor="black",
+        linewidth=0.8
+    )
+
+
+    # --------------------------------------------------
+    # Labels
+    # --------------------------------------------------
+
+    for bar, label in zip(bars, impacts):
+
+        height = bar.get_height()
+
+        plt.text(
+            bar.get_x() + bar.get_width()/2,
+            height + 0.08,
+            label,
+            ha="center",
+            fontsize=10,
+            fontweight="bold"
+        )
+
+
+    # --------------------------------------------------
+    # Titles
+    # --------------------------------------------------
+
+    plt.title(
+        "Structural Impact Assessment of MurB Mutations",
+        pad=20
+    )
+
+    plt.xlabel("MurB Mutation")
+
+    plt.ylabel("Structural Impact")
+
+
+    # --------------------------------------------------
+    # Axis
+    # --------------------------------------------------
+
+    plt.yticks(
+        [1,2,3],
+        ["LOW","MODERATE","HIGH"]
+    )
+
+    plt.ylim(0,3.6)
+
+    plt.grid(axis="y")
+
+
+    # --------------------------------------------------
+    # Save
+    # --------------------------------------------------
+
+    save_figure(
+        "figure05_murb_structural_summary.png"
+    )
+
+    plt.close()
+
+
 # ============================================================
 # GENERATE ALL FIGURES
 # ============================================================
@@ -504,6 +726,12 @@ def generate_all_figures():
 
     print("[3/8] Evidence Distribution...")
     plot_evidence_distribution(df)
+
+    print("[4/8] Gene Distribution...")
+    plot_gene_distribution(df)
+
+    print("[5/8] MurB Structural Summary...")
+    plot_murb_structural_summary(df)
 
     print("\n✓ Visualization completed successfully.")
 
