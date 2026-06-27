@@ -363,6 +363,127 @@ def plot_grantham_vs_risk(df):
 ## different resistance risks due to differences in functional importance, clinical evidence, structural context, and protein stability. MutaDock
 ##integrates these complementary sources of evidence into a unified resistance risk score.
 
+
+# ============================================================
+# FIGURE 03
+# EVIDENCE CATEGORY DISTRIBUTION
+# ============================================================
+
+def plot_evidence_distribution(df):
+    """
+    Generate Figure 03.
+
+    Distribution of curated mutations across evidence categories.
+    """
+
+    evidence_counts = (
+        df["Evidence Category"]
+        .value_counts()
+    )
+
+    categories = evidence_counts.index
+
+    counts = evidence_counts.values
+
+
+    # --------------------------------------------------
+    # Color Palette
+    # --------------------------------------------------
+
+    evidence_colors = {
+
+        "WHO Confirmed": "#2ca02c",
+        "WHO Discordant": "#ff7f0e",
+        "Structural Showcase": "#1f77b4",
+        "Negative Control": "#d62728"
+
+    }
+
+    colors = [
+        evidence_colors[c]
+        for c in categories
+    ]
+
+
+    # --------------------------------------------------
+    # Create Figure
+    # --------------------------------------------------
+
+    plt.figure(figsize=(8, 6))
+
+    bars = plt.bar(
+        categories,
+        counts,
+        width=0.80,
+        color=colors,
+        edgecolor="black",
+        linewidth=0.8
+    )
+
+
+    # --------------------------------------------------
+    # Value Labels
+    # --------------------------------------------------
+
+    for bar in bars:
+
+        height = bar.get_height()
+
+        plt.text(
+            bar.get_x() + bar.get_width()/2,
+            height + 0.08,
+            str(height),
+            ha="center",
+            va="bottom",
+            fontsize=11,
+            fontweight="bold"
+        )
+
+
+    # --------------------------------------------------
+    # Titles & Labels
+    # --------------------------------------------------
+
+    plt.title(
+        "Distribution of Curated Mutations by Evidence Category",
+        pad=20
+    )
+
+    plt.xlabel("Evidence Category")
+
+    plt.ylabel("Number of Mutations")
+
+
+    # --------------------------------------------------
+    # Axis
+    # --------------------------------------------------
+
+    plt.ylim(0, 9)
+
+    plt.xticks(rotation=10)
+
+    plt.grid(axis="y")
+
+
+    # --------------------------------------------------
+    # Save Figure
+    # --------------------------------------------------
+
+    save_figure(
+        "figure03_evidence_distribution.png"
+    )
+
+    plt.close()
+
+
+   
+# SCIENTIFIC PURPOSE
+#
+# Figure 03 summarizes the evidence sources represented in the curated mutation panel. The dataset combines clinically validated WHO mutations, discordant variants,
+# structural showcase mutations, and a negative control, demonstrating that MutaDock integrates multiple evidence types within a unified framework.
+# ============================================================
+
+
 # ============================================================
 # GENERATE ALL FIGURES
 # ============================================================
@@ -379,6 +500,10 @@ def generate_all_figures():
 
     print("[2/8] Grantham vs Risk...")
     plot_grantham_vs_risk(df)
+
+
+    print("[3/8] Evidence Distribution...")
+    plot_evidence_distribution(df)
 
     print("\n✓ Visualization completed successfully.")
 
