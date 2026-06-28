@@ -781,6 +781,223 @@ def plot_who_evidence_vs_verdict(df):
     plt.close()
 
 
+# ============================================================
+# SCIENTIFIC PURPOSE
+#
+# Figure 06 illustrates how different categories of biological evidence are translated into final resistance verdicts by the MutaDock scoring framework.
+# Key Insight:
+# Rather than assigning a single outcome to all mutations, MutaDock integrates clinical evidence, structural context, protein stability, and functional importance to generate
+# biologically meaningful and interpretable resistance classifications.
+# ============================================================
+
+
+
+
+# ============================================================
+# FIGURE 07
+# AMINO ACID PROPERTY CHANGES
+# ============================================================
+
+def plot_amino_acid_properties(df):
+    """
+    Generate Figure 07.
+
+    Distribution of polarity changes among curated mutations.
+    """
+
+    property_counts = (
+        df["Polarity Change"]
+        .value_counts()
+    )
+
+    labels = property_counts.index
+
+    counts = property_counts.values
+
+
+    # --------------------------------------------------
+    # Colors
+    # --------------------------------------------------
+
+    property_colors = {
+
+        "Polar -> Polar": "#1f77b4",
+        "Polar -> Nonpolar": "#ff7f0e",
+        "Nonpolar -> Nonpolar": "#2ca02c",
+        "Nonpolar -> Polar": "#d62728"
+
+    }
+
+    colors = [
+        property_colors[label]
+        for label in labels
+    ]
+
+
+    # --------------------------------------------------
+    # Create Figure
+    # --------------------------------------------------
+
+    plt.figure(figsize=(9,6))
+
+    bars = plt.bar(
+        labels,
+        counts,
+        width=0.7,
+        color=colors,
+        edgecolor="black",
+        linewidth=0.8
+    )
+
+
+    # --------------------------------------------------
+    # Value Labels
+    # --------------------------------------------------
+
+    for bar in bars:
+
+        height = bar.get_height()
+
+        plt.text(
+            bar.get_x() + bar.get_width()/2,
+            height + 0.08,
+            str(height),
+            ha="center",
+            va="bottom",
+            fontsize=11,
+            fontweight="bold"
+        )
+
+
+    # --------------------------------------------------
+    # Titles & Labels
+    # --------------------------------------------------
+
+    plt.title(
+        "Distribution of Amino Acid Polarity Changes",
+        pad=20
+    )
+
+    plt.xlabel("Polarity Change")
+
+    plt.ylabel("Number of Mutations")
+
+
+    # --------------------------------------------------
+    # Axis
+    # --------------------------------------------------
+
+    plt.xticks(rotation=15)
+
+    plt.grid(axis="y")
+
+
+    # --------------------------------------------------
+    # Save Figure
+    # --------------------------------------------------
+
+    save_figure(
+        "figure07_amino_acid_properties.png"
+    )
+
+    plt.close()
+
+
+# ============================================================
+# SCIENTIFIC PURPOSE
+#
+# Figure 07 summarizes the polarity changes associated with
+# curated amino acid substitutions analyzed by MutaDock.
+#
+# Key Insight:
+# Amino acid substitutions may preserve or alter residue
+# polarity, potentially influencing protein folding,
+# molecular interactions, and resistance-associated
+# structural changes.
+# ============================================================
+
+
+
+# ============================================================
+# FIGURE 08
+# MUTADOCK WORKFLOW
+# ============================================================
+
+def plot_workflow_diagram():
+    """
+    Generate Figure 08.
+
+    MutaDock computational workflow.
+    """
+
+    plt.figure(figsize=(15,3))
+
+    plt.axis("off")
+
+
+    workflow = [
+
+        ("Mutation\nInput", 0.05, "#D6EAF8"),
+
+        ("Mutation\nClassification", 0.22, "#AED6F1"),
+
+        ("Property\nAnalysis", 0.39, "#A9DFBF"),
+
+        ("Grantham\nScoring", 0.56, "#F9E79F"),
+
+        ("Structural\nAnalysis", 0.73, "#F5CBA7"),
+
+        ("Unified\nRisk Score", 0.90, "#F1948A")
+
+    ]
+
+
+    for label, x, color in workflow:
+
+        plt.text(
+            x,
+            0.5,
+            label,
+            ha="center",
+            va="center",
+            fontsize=11,
+            fontweight="bold",
+            bbox=dict(
+                boxstyle="round,pad=0.5",
+                facecolor=color,
+                edgecolor="black"
+            )
+        )
+
+
+    for i in range(len(workflow)-1):
+
+        plt.annotate(
+            "",
+            xy=(workflow[i+1][1]-0.05,0.5),
+            xytext=(workflow[i][1]+0.05,0.5),
+            arrowprops=dict(
+                arrowstyle="->",
+                lw=2
+            )
+        )
+
+
+    plt.title(
+        "MutaDock Computational Workflow",
+        fontsize=18,
+        fontweight="bold",
+        pad=20
+    )
+
+
+    save_figure(
+        "figure08_workflow_diagram.png"
+    )
+
+    plt.close()
+
+
 
 
 # ============================================================
@@ -813,6 +1030,13 @@ def generate_all_figures():
 
     print("[6/8] Evidence vs Verdict...")
     plot_who_evidence_vs_verdict(df)
+
+    print("[7/8] Amino Acid Property Changes...")
+    plot_amino_acid_properties(df)
+
+    print("[8/8] Workflow Diagram...")
+    plot_workflow_diagram()
+
 
     print("\n✓ Visualization completed successfully.")
 
