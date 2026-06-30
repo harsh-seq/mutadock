@@ -242,4 +242,4 @@ Potential extensions include:
 - Automated structural annotation
 - Large-scale mutation datasets
 
-The current version intentionally emphasizes biological interpretability and deterministic reasoning while providing a foundation for future AI-assisted evidence integration.
+The current version intentionally emphasizes biological interpretability and deterministic reasoning while providing a foundation for future AI assisted evidence integration.
