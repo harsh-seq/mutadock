@@ -10,7 +10,7 @@
 
 ## Overview
 
-MutaDock is a modular computational bioinformatics framework designed for the mechanistic interpretation of drug-resistance-associated mutations in *Mycobacterium tuberculosis*.
+MutaDock is a modular computational bioinformatics framework designed for the mechanistic interpretation of drugresistance-associated mutations in *Mycobacterium tuberculosis*.
 
 Unlike conventional black box prediction systems, MutaDock follows an **interpretable, knowledge guided architecture**, integrating multiple biological evidence layers into a unified resistance assessment.
 
@@ -32,9 +32,13 @@ Every prediction is accompanied by a biologically interpretable explanation rath
 
 Understanding how genetic mutations influence antimicrobial resistance remains one of the major challenges in computational biology.
 
-While numerous computational tools estimate mutation effects, many function as black-box predictors that provide limited biological interpretability.
+While numerous computational tools estimate mutation effects, many function as black box predictors that provide limited biological interpretability.
 
 MutaDock was developed to bridge this gap by combining classical bioinformatics, structural biology, and evidence-based reasoning into a transparent computational workflow.
+
+Existing catalogue based resistance annotation tools are primarily designed to recognize previously reported resistance-associated mutations. As a result, novel amino acid substitutions frequently lack detailed mechanistic interpretation when prior clinical or experimental evidence is unavailable.
+
+MutaDock addresses this limitation through a mutation agnostic evidence integration framework, capable of accepting any amino acid substitution as input and generating an interpretable Unified Resistance Risk Score by integrating physicochemical, biochemical, structural, and stability based evidence. While the current version provides detailed structural interpretation only for residues supported by curated structural annotations, its overall architecture remains applicable to both known and previously uncharacterized mutations, providing a scalable foundation for future automated structural feature extraction and AI-assisted evidence integration.
 
 ---
 
@@ -94,10 +98,7 @@ Visualization Engine
 
 # Project Structure
 
-```
-# Project Structure
-
-```
+```text
 mutadock/
 │
 ├── core/
@@ -149,7 +150,6 @@ mutadock/
 ├── README.md
 ├── requirements.txt
 └── run_pipeline.py
-```
 ```
 
 ---
@@ -226,7 +226,7 @@ The current version provides a strong interpretable foundation while remaining f
 
 Potential future developments include:
 
-- AlphaFold-derived structural descriptors
+- AlphaFold derived structural descriptors
 - Protein Language Model features
 - Explainable Machine Learning
 - Multi-gene expansion
@@ -315,6 +315,8 @@ Developed as part of the **ELITE Summer Internship Programme** under the supervi
 # Contact
 
 Harshit Belwal
+
+
 Gmail : belwalharshit920@gmail.com
 GitHub:https://github.com/hrsh-seq
 Linkedin : https://www.linkedin.com/in/harshit-belwal/
