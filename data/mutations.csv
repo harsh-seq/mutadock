@@ -14,3 +14,32 @@ katG,R463L,Isoniazid,basic,Not Associated with Resistance,Not Associated with Re
 MurB,R176H,None,full,NA,NA,Structural Showcase
 MurB,Y210F,None,full,NA,NA,Structural Showcase
 MurB,S257A,None,full,NA,NA,Structural Showcase
+
+# ============================================================
+# MutaDock Amino Acid One Letter Code Reference
+# ============================================================
+#
+# A = Alanine
+# R = Arginine
+# N = Asparagine
+# D = Aspartic Acid
+# C = Cysteine
+# Q = Glutamine
+# E = Glutamic Acid
+# G = Glycine
+# H = Histidine
+# I = Isoleucine
+# L = Leucine
+# K = Lysine
+# M = Methionine
+# F = Phenylalanine
+# P = Proline
+# S = Serine
+# T = Threonine
+# W = Tryptophan
+# Y = Tyrosine
+# V = Valine
+#
+# Standard IUPAC one letter amino acid abbreviations.
+# Used throughout the MutaDock pipeline and associated CSV files.
+# ============================================================

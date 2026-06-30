@@ -19,3 +19,33 @@ T,Threonine,Neutral,Polar,-0.7,119.12,Medium
 W,Tryptophan,Neutral,Nonpolar,-0.9,204.23,Large
 Y,Tyrosine,Neutral,Polar,-1.3,181.19,Large
 V,Valine,Neutral,Nonpolar,4.2,117.15,Medium
+
+
+# ============================================================
+# MutaDock Amino Acid One Letter Code Reference
+# ============================================================
+#
+# A = Alanine
+# R = Arginine
+# N = Asparagine
+# D = Aspartic Acid
+# C = Cysteine
+# Q = Glutamine
+# E = Glutamic Acid
+# G = Glycine
+# H = Histidine
+# I = Isoleucine
+# L = Leucine
+# K = Lysine
+# M = Methionine
+# F = Phenylalanine
+# P = Proline
+# S = Serine
+# T = Threonine
+# W = Tryptophan
+# Y = Tyrosine
+# V = Valine
+#
+# Standard IUPAC one letter amino acid abbreviations.
+# Used throughout the MutaDock pipeline and associated CSV files.
+# ============================================================

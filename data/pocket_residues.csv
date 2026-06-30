@@ -7,3 +7,32 @@ residue_id,residue_name,functional_region,residue_role,interaction_type,source,c
 257,S,active_site,proton_donor,acid_base_catalysis,PMC4659487,True
 324,H,FAD_binding,cofactor_contact,hydrogen_bond,PMC4659487,True
 361,E,FAD_binding,cofactor_contact,electrostatic,PMC4659487,True
+
+# ============================================================
+# MutaDock Amino Acid One Letter Code Reference
+# ============================================================
+#
+# A = Alanine
+# R = Arginine
+# N = Asparagine
+# D = Aspartic Acid
+# C = Cysteine
+# Q = Glutamine
+# E = Glutamic Acid
+# G = Glycine
+# H = Histidine
+# I = Isoleucine
+# L = Leucine
+# K = Lysine
+# M = Methionine
+# F = Phenylalanine
+# P = Proline
+# S = Serine
+# T = Threonine
+# W = Tryptophan
+# Y = Tyrosine
+# V = Valine
+#
+# Standard IUPAC one letter amino acid abbreviations.
+# Used throughout the MutaDock pipeline and associated CSV files.
+# ============================================================
